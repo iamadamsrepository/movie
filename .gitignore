@@ -1,0 +1,5 @@
+*.gz
+*.tsv
+
+scraped_movie_data.csv
+!scraped_movie_data.csv.gz

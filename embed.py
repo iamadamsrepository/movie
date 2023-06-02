@@ -58,7 +58,7 @@ while l != len(recommendations):
     for id, rs in recommendations.items():
         f = {r for r in rs if r in recommendations}
         recommendations[id] = f
-    recommendations = {id: f for id, f in recommendations.items() if len(f) >= 4 and loaded_movies[id].vote_count > 1000}
+    recommendations = {id: f for id, f in recommendations.items() if len(f) >= 10 and loaded_movies[id].vote_count > 4000}
 recommendations = {loaded_movies[id].title: {loaded_movies[i].title for i in ids} for id, ids in recommendations.items()}
 movies = {v.title: v for v in loaded_movies.values() if v.title in recommendations}
 movie_ids = {k: i for i, k in enumerate(movies.keys())}
@@ -95,12 +95,17 @@ def get_knn_genre_score(movie_embeddings: torch.nn.Embedding, genre_embeddings: 
     nbrs = NearestNeighbors(n_neighbors=6, algorithm='ball_tree').fit(genre_embeddings.weight.data)
     distances, indices = nbrs.kneighbors(movie_embeddings.weight.data)
     scores = []
+    genre_score_counter = defaultdict(list)
     for id, knns in enumerate(indices):
         movie = movies[id_movies[id]]
         genres = set(movie.genre_ids)
         knns = {id_genres[i] for i in knns[:len(genres)]}
         score = len(knns & genres) / len(genres)
         scores.append(score)
+        for g in genres:
+            genre_score_counter[g].append(score)
+    genre_scores = {genre: sum(scores) / len(scores) for genre, scores in genre_score_counter.items()}
+    genre_count = {genre: len(scores) for genre, scores in genre_score_counter.items()}
     return sum(scores) / len(scores)
 
 

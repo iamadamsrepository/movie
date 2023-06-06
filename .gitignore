@@ -1,5 +1,6 @@
 *.gz
 *.tsv
+__pycache__/
 
 scraped_movie_data.csv
 !scraped_movie_data.csv.gz

@@ -78,4 +78,9 @@ df["countries"] = df["scraped_data"].apply(
 )
 df = df.drop(columns=["scraped_data"])
 df.to_csv(open("movie_data.csv", "w"), index=False)
+
+genres = pd.Series(sorted(list(set(sum(map(json.loads, list(df["genres"])), [])))))
+genres.to_csv(open("genres.csv", "w"), index=False, header=None)
+keywords = pd.Series(sorted(list(set(sum(map(json.loads, list(df["keywords"])), [])))))
+keywords.to_csv(open("keywords.csv", "w"), index=False, header=None)
 ...

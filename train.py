@@ -17,7 +17,7 @@ import time
 
 EMBEDDING_SIZE = 512
 
-EPOCHS = 400
+EPOCHS = 150
 BATCH_SIZE = 64
 DEVICE = "cuda"
 DROPOUT = 0.5

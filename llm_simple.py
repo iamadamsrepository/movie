@@ -16,6 +16,8 @@ embedder = SentenceTransformer('all-mpnet-base-v2')
 
 embeddings = embedder.encode(df["sentence"], convert_to_tensor=True)
 
+pickle.dump(embeddings, open("movie_embeddings_simple.pickle", "wb"))
+
 def print_closest(sentence):
     embedding = embedder.encode(sentence, convert_to_tensor=True)
     cos_scores = util.cos_sim(embedding, embeddings)[0]

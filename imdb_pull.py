@@ -29,9 +29,14 @@ def get_imdb_data(tconst):
         ...
     return data
 
-df = pd.read_csv(open("scraped_movie_data.csv", "r"))
+df = pd.read_csv(open("scraped_movie_data.csv"))
+# new_movie_df = pd.read_csv(open("dataset_movie_data.csv"))
+# df = pd.merge(new_movie_df, df[["tconst", "scraped_data"]], on='tconst', how='left')
+# df[df["scraped_data"].apply(lambda a: isinstance(a, str))]
+...
 
 for i, row in df.iterrows():
+    print(i, end="\r")
     if isinstance(row["scraped_data"], str):
         continue
     imdb_data = get_imdb_data(row["tconst"])
@@ -59,7 +64,10 @@ def get_metascore(data):
         return None
 
 def get_countries(data):
-    return json.dumps([i["id"] for i in data["aboveTheFoldData"]["countriesOfOrigin"]["countries"]])
+    countries = [i["id"] for i in data["aboveTheFoldData"]["countriesOfOrigin"]["countries"]]
+    if len(countries) > 1:
+        raise ValueError()
+    return countries[0]
 
 df["content_rating"] = df["scraped_data"].apply(
     lambda text: get_content_rating(json.loads(text))
